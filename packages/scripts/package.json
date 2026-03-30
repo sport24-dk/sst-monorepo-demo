@@ -1,9 +1,9 @@
 {
-  "name": "@monorepo-template/scripts",
+  "name": "@clean-sst-monorepo/scripts",
   "version": "0.0.0",
   "type": "module",
   "dependencies": {
-    "@monorepo-template/core": "*",
+    "@clean-sst-monorepo/core": "*",
     "sst": "*"
   },
   "scripts": {

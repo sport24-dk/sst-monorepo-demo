@@ -1,9 +1,9 @@
 {
-  "name": "@monorepo-template/functions",
+  "name": "@clean-sst-monorepo/functions",
   "version": "0.0.0",
   "type": "module",
   "dependencies": {
-    "@monorepo-template/core": "*",
+    "@clean-sst-monorepo/core": "*",
     "sst": "*"
   },
   "devDependencies": {

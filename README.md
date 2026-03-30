@@ -16,65 +16,102 @@ A template to create a monorepo SST v3 project. [Learn more](https://sst.dev/doc
 3. Rename the files in the project to the name of your app.
 
    ```bash
-   npx replace-in-file '/monorepo-template/g' 'MY_APP' '**/*.*' --verbose
+   npx replace-in-file '/clean-sst-monorepo/g' 'MY_APP' '**/*.*' --verbose
    ```
 
-4. Deploy!
+4. Install dependencies.
 
    ```bash
    npm install
+   ```
+
+5. Deploy!
+
+   ```bash
    npx sst deploy
    ```
 
-5. Optionally, enable [_git push to deploy_](https://sst.dev/docs/console/#autodeploy).
+   This deploys the Lambda API, S3 bucket, and Next.js app to AWS. Once complete, the CLI outputs the `WebUrl` for your site.
 
-## Usage
+6. Optionally, enable [_git push to deploy_](https://sst.dev/docs/console/#autodeploy).
 
-This template uses [npm Workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspaces). It has 3 packages to start with and you can add more it.
+## Development
 
-1. `core/`
+Start the SST dev environment to work on all resources locally with live reload.
 
-   This is for any shared code. It's defined as modules. For example, there's the `Example` module.
+```bash
+npx sst dev
+```
 
-   ```ts
-   export module Example {
-     export function hello() {
-       return "Hello, world!";
-     }
-   }
-   ```
+Then in a separate terminal, start the Next.js dev server.
 
-   That you can use across other packages using.
+```bash
+npm run dev -w apps/web
+```
 
-   ```ts
-   import { Example } from "@aws-monorepo/core/example";
+## Project structure
 
-   Example.hello();
-   ```
+This template uses [npm Workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspaces).
 
-   We also have [Vitest](https://vitest.dev/) configured for testing this package with the `sst shell` CLI.
+```
+apps/
+  web/          → Next.js 15 frontend (deployed via SST Nextjs component)
+packages/
+  core/         → Shared library code
+  functions/    → Lambda function handlers
+  scripts/      → One-off scripts (run via sst shell)
+infra/          → SST infrastructure definitions
+```
 
-   ```bash
-   npm test
-   ```
+### `apps/web/`
 
-2. `functions/`
+A Next.js 15 app using React 19 and the App Router. Deployed to AWS with the [`sst.aws.Nextjs`](https://sst.dev/docs/component/aws/nextjs) component.
 
-   This is for your Lambda functions and it uses the `core` package as a local dependency.
+```bash
+# Run the dev server
+npm run dev -w apps/web
 
-3. `scripts/`
+# Build locally
+npm run build -w apps/web
+```
 
-    This is for any scripts that you can run on your SST app using the `sst shell` CLI and [`tsx`](https://www.npmjs.com/package/tsx). For example, you can run the example script using:
+### `packages/core/`
 
-   ```bash
-   npm run shell src/example.ts
-   ```
+Shared code defined as modules. For example, there's the `Example` module.
 
-### Infrastructure
+```ts
+import { Example } from "@clean-sst-monorepo/core/example";
 
-The `infra/` directory allows you to logically split the infrastructure of your app into separate files. This can be helpful as your app grows.
+Example.hello();
+```
 
-In the template, we have an `api.ts`, and `storage.ts`. These export the created resources. And are imported in the `sst.config.ts`.
+Tests use [Vitest](https://vitest.dev/) via the `sst shell` CLI.
+
+```bash
+npm test -w packages/core
+```
+
+### `packages/functions/`
+
+Lambda function handlers. Uses the `core` package as a local dependency.
+
+### `packages/scripts/`
+
+Scripts that run against your SST app using `sst shell` and [`tsx`](https://www.npmjs.com/package/tsx).
+
+```bash
+npm run shell src/example.ts -w packages/scripts
+```
+
+### `infra/`
+
+Infrastructure definitions split into separate files. Imported in `sst.config.ts`.
+
+| File         | Resources                                |
+|--------------|------------------------------------------|
+| `storage.ts` | S3 bucket                                |
+| `api.ts`     | Lambda function with URL                 |
+| `web.ts`     | Next.js site (CloudFront + Lambda@Edge)  |
 
 ---
 
