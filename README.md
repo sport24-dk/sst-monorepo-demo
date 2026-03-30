@@ -4,28 +4,13 @@ A template to create a monorepo SST v3 project. [Learn more](https://sst.dev/doc
 
 ## Get started
 
-1. Use this template to [create your own repo](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
-
-2. Clone the new repo.
-
-   ```bash
-   git clone <REPO_URL> MY_APP
-   cd MY_APP
-   ```
-
-3. Rename the files in the project to the name of your app.
-
-   ```bash
-   npx replace-in-file '/clean-sst-monorepo/g' 'MY_APP' '**/*.*' --verbose
-   ```
-
-4. Install dependencies.
+1. Install dependencies.
 
    ```bash
    npm install
    ```
 
-5. Deploy!
+2. Deploy!
 
    ```bash
    npx sst deploy
@@ -33,7 +18,7 @@ A template to create a monorepo SST v3 project. [Learn more](https://sst.dev/doc
 
    This deploys the Lambda API, S3 bucket, and Next.js app to AWS. Once complete, the CLI outputs the `WebUrl` for your site.
 
-6. Optionally, enable [_git push to deploy_](https://sst.dev/docs/console/#autodeploy).
+3. Optionally, enable [_git push to deploy_](https://sst.dev/docs/console/#autodeploy).
 
 ## Development
 
